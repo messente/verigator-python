@@ -131,8 +131,6 @@ class Auth(object):
         })
         data = response.json()
 
-        print(data)
-
         if data['method'] == "sms":
             return data['auth_id']
 
