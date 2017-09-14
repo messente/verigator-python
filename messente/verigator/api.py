@@ -1,9 +1,10 @@
+import routes
 from client import RestClient
 from controllers import Users, Services, Auth
 
 
 class Api(object):
-    def __init__(self, endpoint, username, password):
+    def __init__(self, username, password, endpoint=routes.URL):
         """
 
         :type password: str
