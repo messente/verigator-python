@@ -2,8 +2,8 @@ import unittest
 from unittest import TestCase
 
 from requests_mock import mock
-
-from messente.verigator.client import *
+from messente.verigator.exceptions import *
+from messente.verigator.client import RestClient
 
 
 @mock()
@@ -66,38 +66,59 @@ class TestRestClient(TestCase):
 
     def test_raises_internal_server_error(self, request_mocker):
         self._register_addresses(request_mocker, 500)
-        self.assertRaises(InternalServerError, self.client.get, "test")
-        self.assertRaises(InternalServerError, self.client.post, "test")
-        self.assertRaises(InternalServerError, self.client.put, "test")
-        self.assertRaises(InternalServerError, self.client.delete, "test")
+
+        self.assertRaises(InternalError, self.client.get, "test")
+        self.assertRaises(InternalError, self.client.post, "test")
+        self.assertRaises(InternalError, self.client.put, "test")
+        self.assertRaises(InternalError, self.client.delete, "test")
 
     def test_raises_bad_request_error(self, request_mocker):
         self._register_addresses(request_mocker, 400)
-        self.assertRaises(BadRequestError, self.client.get, "test")
-        self.assertRaises(BadRequestError, self.client.post, "test")
-        self.assertRaises(BadRequestError, self.client.put, "test")
-        self.assertRaises(BadRequestError, self.client.delete, "test")
+
+        self.assertRaises(InvalidDataError, self.client.get, "test")
+        self.assertRaises(InvalidDataError, self.client.post, "test")
+        self.assertRaises(InvalidDataError, self.client.put, "test")
+        self.assertRaises(InvalidDataError, self.client.delete, "test")
 
     def test_raises_not_found_error(self, request_mocker):
         self._register_addresses(request_mocker, 404)
-        self.assertRaises(NotFoundError, self.client.get, "test")
-        self.assertRaises(NotFoundError, self.client.post, "test")
-        self.assertRaises(NotFoundError, self.client.put, "test")
-        self.assertRaises(NotFoundError, self.client.delete, "test")
+
+        self.assertRaises(NoSuchResourceError, self.client.get, "test")
+        self.assertRaises(NoSuchResourceError, self.client.post, "test")
+        self.assertRaises(NoSuchResourceError, self.client.put, "test")
+        self.assertRaises(NoSuchResourceError, self.client.delete, "test")
 
     def test_raises_forbidden_error(self, request_mocker):
         self._register_addresses(request_mocker, 403)
-        self.assertRaises(ForbiddenError, self.client.get, "test")
-        self.assertRaises(ForbiddenError, self.client.post, "test")
-        self.assertRaises(ForbiddenError, self.client.put, "test")
-        self.assertRaises(ForbiddenError, self.client.delete, "test")
+
+        self.assertRaises(ResourceForbiddenError, self.client.get, "test")
+        self.assertRaises(ResourceForbiddenError, self.client.post, "test")
+        self.assertRaises(ResourceForbiddenError, self.client.put, "test")
+        self.assertRaises(ResourceForbiddenError, self.client.delete, "test")
 
     def test_raises_unauthorized_error(self, request_mocker):
         self._register_addresses(request_mocker, 401)
-        self.assertRaises(UnauthorizedError, self.client.get, "test")
-        self.assertRaises(UnauthorizedError, self.client.post, "test")
-        self.assertRaises(UnauthorizedError, self.client.put, "test")
-        self.assertRaises(UnauthorizedError, self.client.delete, "test")
+
+        self.assertRaises(WrongCredentialsError, self.client.get, "test")
+        self.assertRaises(WrongCredentialsError, self.client.post, "test")
+        self.assertRaises(WrongCredentialsError, self.client.put, "test")
+        self.assertRaises(WrongCredentialsError, self.client.delete, "test")
+
+    def test_raises_confilct_error(self, request_mocker):
+        self._register_addresses(request_mocker, 409)
+
+        self.assertRaises(ResourceAlreadyExistsError, self.client.get, "test")
+        self.assertRaises(ResourceAlreadyExistsError, self.client.post, "test")
+        self.assertRaises(ResourceAlreadyExistsError, self.client.put, "test")
+        self.assertRaises(ResourceAlreadyExistsError, self.client.delete, "test")
+
+    def test_raises_any_error(self, request_mocker):
+        self._register_addresses(request_mocker, 447)
+
+        self.assertRaises(VerigatorError, self.client.get, "test")
+        self.assertRaises(VerigatorError, self.client.post, "test")
+        self.assertRaises(VerigatorError, self.client.put, "test")
+        self.assertRaises(VerigatorError, self.client.delete, "test")
 
     @staticmethod
     def _register_addresses(request_mocker, code):
@@ -105,7 +126,3 @@ class TestRestClient(TestCase):
         request_mocker.register_uri('POST', 'http://test/test', json={}, status_code=code)
         request_mocker.register_uri('PUT', 'http://test/test', json={}, status_code=code)
         request_mocker.register_uri('DELETE', 'http://test/test', json={}, status_code=code)
-
-
-if __name__ == '__main__':
-    unittest.main()
