@@ -67,3 +67,10 @@ class TestUsers(TestCase):
             self.assertEqual(e.message, "message")
         else:
             self.fail("Exception not raised")
+
+    def test_invalid_input(self):
+        self.assertRaises(ValueError, Users, None)
+        self.assertRaises(ValueError, self.users.create, None, None, None)
+        self.assertRaises(ValueError, self.users.get, None, None)
+        self.assertRaises(ValueError, self.users.get_all, None)
+        self.assertRaises(ValueError, self.users.delete, None, None)

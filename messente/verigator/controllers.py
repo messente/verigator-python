@@ -1,11 +1,35 @@
+from functools import wraps
+
 import routes
 from models import Service, User
+from .client import RestClient
+
+
+def _validate_input(func):
+    @wraps(func)
+    def wrapper(*args):
+        for arg in args[1:]:
+            if not isinstance(arg, str):
+                raise ValueError("{} should be string".format(arg))
+        return func(*args)
+    return wrapper
+
+
+def _validate_client(func):
+    @wraps(func)
+    def wrapper(self, client):
+        if not isinstance(client, RestClient):
+            raise ValueError("client should be RestClient")
+        return func(self, client)
+    return wrapper
 
 
 class Services(object):
+    @_validate_client
     def __init__(self, client):
         self.client = client
 
+    @_validate_input
     def create(self, domain, name):
         """Created ServiceController instance.
 
@@ -24,6 +48,7 @@ class Services(object):
         })
         return self.__service_from_json(response)
 
+    @_validate_input
     def get(self, id):
         """Returns service with a given id.
 
@@ -38,6 +63,7 @@ class Services(object):
 
         return self.__service_from_json(response)
 
+    @_validate_input
     def delete(self, id):
         """
 
@@ -58,9 +84,11 @@ class Services(object):
 
 # noinspection PyShadowingBuiltins
 class Users(object):
+    @_validate_client
     def __init__(self, client):
         self.client = client
 
+    @_validate_input
     def get_all(self, service_id):
         """
 
@@ -76,6 +104,7 @@ class Users(object):
         print(response)
         return [self.__user_from_json(user) for user in response['users']]
 
+    @_validate_input
     def get(self, service_id, id):
         """
 
@@ -85,6 +114,7 @@ class Users(object):
         response = self.client.get(routes.GET_USER.format(service_id, id))
         return self.__user_from_json(response)
 
+    @_validate_input
     def create(self, service_id, number, username):
         """
 
@@ -92,12 +122,14 @@ class Users(object):
         :param number:
         :param service_id: Service
         """
+
         response = self.client.post(routes.CREATE_USER.format(service_id), json={
             "phone_number": number,
             "id_in_service": username
         })
         return self.__user_from_json(response)
 
+    @_validate_input
     def delete(self, service_id, id):
         """
 
@@ -117,9 +149,11 @@ class Auth(object):
     METHOD_SMS = "sms"
     METHOD_TOTP = "totp"
 
+    @_validate_client
     def __init__(self, client):
         self.client = client
 
+    @_validate_input
     def initiate(self, service_id, user_id, method):
         response = self.client.post(routes.AUTH_INITIATE.format(service_id, user_id), json={
             "method": method
@@ -128,6 +162,7 @@ class Auth(object):
         if response['method'] == "sms":
             return response['auth_id']
 
+    @_validate_input
     def verify(self, service_id, user_id, method, token, auth_id=None):
         json = {"method": method, "token": token}
 

@@ -56,3 +56,9 @@ class TestServices(TestCase):
             self.assertEqual(e.message, "message")
         else:
             self.fail("Exception not raised")
+
+    def test_invalid_input(self):
+        self.assertRaises(ValueError, Services, None)
+        self.assertRaises(ValueError, self.services.create, None, None, None)
+        self.assertRaises(ValueError, self.services.get, None, None)
+        self.assertRaises(ValueError, self.services.delete, None, None)

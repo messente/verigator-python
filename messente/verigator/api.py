@@ -11,6 +11,7 @@ class Api(object):
         :type username: str
         :type endpoint: str
         """
+        print(__name__)
         client = RestClient(endpoint, username, password)
         self.users = Users(client)
         self.services = Services(client)

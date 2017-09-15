@@ -7,7 +7,6 @@ from messente.verigator.controllers import Auth
 from verigator import routes
 
 
-# noinspection PyUnresolvedReferences
 class TestAuth(TestCase):
     def setUp(self):
         self.client = RestClient("http://test", "test", "test")
@@ -72,3 +71,8 @@ class TestAuth(TestCase):
         self.client.put.assert_called_with(routes.AUTH_VERIFY.format("sid", "uid"),
                                            json={"method": "totp", "token": "token"})
         self.assertFalse(verified)
+
+    def test_invalid_input(self):
+        self.assertRaises(ValueError, Auth, None)
+        self.assertRaises(ValueError, self.auth.initiate, None, None, None)
+        self.assertRaises(ValueError, self.auth.verify, None, None, None, None)
