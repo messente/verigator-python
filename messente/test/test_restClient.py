@@ -22,36 +22,47 @@ class TestRestClient(TestCase):
             "Accept": "application/json"
         }
 
+        self.sample_response = {
+            "foo": "bar"
+        }
+
     def test_auth_header(self, request_mocker):
-        request_mocker.get("http://test/", request_headers=self.valid_headers)
+        request_mocker.get("http://test/", request_headers=self.valid_headers, json={})
 
         self.client.get("")
         self.assertTrue(request_mocker.called)
 
     def test_get(self, request_mocker):
-        request_mocker.get("http://test/test?foo=bar", complete_qs=True, request_headers={"foo": "bar"})
-        self.client.get("test", params={"foo": "bar"}, headers={"foo": "bar"})
+        request_mocker.get("http://test/test?foo=bar", complete_qs=True, request_headers={"foo": "bar"},
+                           json=self.sample_response)
+        json = self.client.get("test", params={"foo": "bar"}, headers={"foo": "bar"})
         self.assertTrue(request_mocker.called)
+        self.assertEqual(json, self.sample_response)
 
     def test_post(self, request_mocker):
-        request_mocker.post("http://test/test", text='{"foo":"bar"}', request_headers=self.valid_post_headers)
+        request_mocker.post("http://test/test", json=self.sample_response, request_headers=self.valid_post_headers)
 
-        self.client.post("test", json={"foo": "bar"})
+        json = self.client.post("test", json=self.sample_response)
 
         self.assertTrue(request_mocker.called)
+        self.assertEqual(json, self.sample_response)
+        self.assertEqual(request_mocker.request_history[0].json(), self.sample_response)
 
     def test_put(self, request_mocker):
-        request_mocker.put("http://test/test", text='{"foo":"bar"}', request_headers=self.valid_post_headers)
+        request_mocker.put("http://test/test", json=self.sample_response, request_headers=self.valid_post_headers)
 
-        self.client.put("test", json={"foo": "bar"})
+        json = self.client.put("test", json=self.sample_response)
 
         self.assertTrue(request_mocker.called)
+        self.assertEqual(json, self.sample_response)
+        self.assertEqual(request_mocker.request_history[0].json(), self.sample_response)
 
     def test_delete(self, request_mocker):
-        request_mocker.delete("http://test/test", request_headers=self.valid_headers)
+        request_mocker.delete("http://test/test", json=self.sample_response, request_headers=self.valid_headers)
 
-        self.client.delete("test")
+        json = self.client.delete("test")
         self.assertTrue(request_mocker.called)
+        self.assertEqual(json, self.sample_response)
 
     def test_raises_internal_server_error(self, request_mocker):
         self._register_addresses(request_mocker, 500)
