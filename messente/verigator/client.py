@@ -1,4 +1,5 @@
 import requests
+from .exceptions import *
 
 
 class RestClient(object):
@@ -9,25 +10,6 @@ class RestClient(object):
         self.headers = {
             "X-Service-Auth": ":".join([self.username, self.password])
         }
-
-    def _request(self, method, path, params=None, headers=None, json=None):
-        resp = requests.request(method, path, params=params, headers=headers, json=json)
-
-        status_code = resp.status_code
-        resp_json = resp.json()
-
-        if status_code == 500:
-            raise InternalServerError(resp_json)
-        elif status_code == 400:
-            raise BadRequestError(resp_json)
-        elif status_code == 401:
-            raise UnauthorizedError(resp_json)
-        elif status_code == 403:
-            raise ForbiddenError(resp_json)
-        elif status_code == 404:
-            raise NotFoundError(resp_json)
-
-        return resp_json
 
     def get(self, path, params=None, headers=None):
         new_headers = self.__get_headers(headers)
@@ -58,18 +40,29 @@ class RestClient(object):
     def __url(self, path):
         return "/".join([self.endpoint.strip("/"), path])
 
+    @staticmethod
+    def _request(method, path, params=None, headers=None, json=None):
+        resp = requests.request(method, path, params=params, headers=headers, json=json)
 
-class InternalServerError(Exception):
-    pass
+        status_code = resp.status_code
+        resp_json = resp.json()
+        message = resp_json.get('message', None)
 
-class BadRequestError(Exception):
-    pass
+        if status_code == 400:
+            raise InvalidDataError(400, message)
+        elif status_code == 401:
+            raise WrongCredentialsError(401, message)
+        elif status_code == 403:
+            raise ResourceForbiddenError(403, message)
+        elif status_code == 404:
+            raise NoSuchResourceError(404, message)
+        elif status_code == 409:
+            raise ResourceAlreadyExistsError(409, message)
+        elif status_code == 422:
+            raise InvalidDataError(422, message)
+        elif status_code == 500:
+            raise InternalError(500, resp_json)
+        elif 300 <= status_code <= 600:
+            raise VerigatorError(status_code, resp_json)
 
-class NotFoundError(Exception):
-    pass
-
-class ForbiddenError(Exception):
-    pass
-
-class UnauthorizedError(Exception):
-    pass
+        return resp_json

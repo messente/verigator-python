@@ -2,7 +2,6 @@ import routes
 from models import Service, User
 
 
-# noinspection PyShadowingBuiltins
 class Services(object):
     def __init__(self, client):
         self.client = client
@@ -19,16 +18,11 @@ class Services(object):
 
         """
 
-        data = {
+        response = self.client.post(routes.CREATE_SERVICE, json={
             'fqdn': domain,
             'name': name
-        }
-
-        response = self.client.post(routes.CREATE_SERVICE, json=data)
-
-        data = response.json()
-
-        return Service(data['id'], data['ctime'], data['name'])
+        })
+        return self.__service_from_json(response)
 
     def get(self, id):
         """Returns service with a given id.
@@ -42,7 +36,7 @@ class Services(object):
         """
         response = self.client.get(routes.GET_SERVICE.format(id))
 
-        return self.__service_from_json(response.json())
+        return self.__service_from_json(response)
 
     def delete(self, id):
         """
@@ -67,49 +61,50 @@ class Users(object):
     def __init__(self, client):
         self.client = client
 
-    def get_all(self, service):
+    def get_all(self, service_id):
         """
 
         Args:
-            service (str): .
+            service_id (str): .
 
         Returns:
-            type: The return value. True for success, False otherwise.
+            list: The return value. True for success, False otherwise.
 
         """
-        response = self.client.get(routes.GET_USERS.format(service))
+        response = self.client.get(routes.GET_USERS.format(service_id))
 
-        data = response.json()
+        print(response)
+        return [self.__user_from_json(user) for user in response['users']]
 
-        return [self.__user_from_json(user) for user in data['users']]
-
-    def get(self, service, id):
+    def get(self, service_id, id):
         """
 
         :param id:
-        :param service:
+        :param service_id:
         """
-        response = self.client.get(routes.GET_USER.format(service.id, id))
-        return self.__user_from_json(response.json())
+        response = self.client.get(routes.GET_USER.format(service_id, id))
+        return self.__user_from_json(response)
 
-    def create(self, service, number, username):
+    def create(self, service_id, number, username):
         """
 
-        :param service: Service
+        :param username:
+        :param number:
+        :param service_id: Service
         """
-        response = self.client.post(routes.CREATE_USER.format(service.id), json={
+        response = self.client.post(routes.CREATE_USER.format(service_id), json={
             "phone_number": number,
             "id_in_service": username
         })
-        return self.__user_from_json(response.json())
+        return self.__user_from_json(response)
 
-    def delete(self, service, id):
+    def delete(self, service_id, id):
         """
 
         :param id:
-        :param service:
+        :param service_id:
         """
-        self.client.delete(routes.DELETE_USER.format(service.id, id))
+        self.client.delete(routes.DELETE_USER.format(service_id, id))
 
         return True
 
@@ -125,20 +120,23 @@ class Auth(object):
     def __init__(self, client):
         self.client = client
 
-    def initiate(self, service, user, method):
-        response = self.client.post(routes.AUTH_INITIATE.format(service.id, user.id), json={
+    def initiate(self, service_id, user_id, method):
+        response = self.client.post(routes.AUTH_INITIATE.format(service_id, user_id), json={
             "method": method
         })
-        data = response.json()
 
-        if data['method'] == "sms":
-            return data['auth_id']
+        if response['method'] == "sms":
+            return response['auth_id']
 
-    def verify(self, service, user, method, token, auth_id=None):
-        response = self.client.put(routes.AUTH_VERIFY.format(service.id, user.id), json={
-            "method": method,
-            "token": token,
-            "auth_id": auth_id
-        })
+    def verify(self, service_id, user_id, method, token, auth_id=None):
+        json = {"method": method, "token": token}
 
-        return response.json()
+        if auth_id:
+            json["auth_id"] = auth_id
+
+        response = self.client.put(routes.AUTH_VERIFY.format(service_id, user_id), json=json)
+
+        verified = response['verified']
+        error = response.get('status', None)
+
+        return verified, error
