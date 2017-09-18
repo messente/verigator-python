@@ -1,4 +1,4 @@
-URL = "https://api.dev.verigator.com"
+URL = "https://api.verigator.com"
 
 CREATE_SERVICE = "v1/service/service"
 GET_SERVICE = "v1/service/service/{}"
