@@ -1,44 +1,111 @@
 import requests
+
 from .exceptions import *
 
 
 class RestClient(object):
+    """Simple http client that handles authentication and content-type
+        by default for post and put calls. Default headers are
+        content-type: application/json and accept: application/json, however they can be override
+
+    Note: If server returns any other status code except 2xx, client will raise appropriate exception
+
+
+    Attributes:
+        endpoint (str): server url, any other paths will be appended to it
+        auth_header (dict): default headers for each request (contains only auth header)
+    """
+
     def __init__(self, endpoint, username, password):
+        """
+
+        Args:
+            endpoint (str): server url, any other paths will be appended to it
+            username (str): used for authentication
+            password (str): used for authentication
+        """
         self.endpoint = endpoint
-        self.username = username
-        self.password = password
-        self.headers = {
-            "X-Service-Auth": ":".join([self.username, self.password])
+        self.auth_header = {
+            "X-Service-Auth": ":".join([username, password])
+        }
+        self.content_type_headers = {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
         }
 
     def get(self, path, params=None, headers=None):
-        new_headers = self.__get_headers(headers)
+        """
+        Wrapper around requests get method
+        Args:
+            path (str): request path
+            params (dict): url parameters
+            headers (dict): additional headers
+
+        Returns:
+            dict: response body
+        """
+        new_headers = self.__merge_dicts(self.auth_header, headers)
         return self._request("GET", self.__url(path), params=params, headers=new_headers)
 
     def post(self, path, headers=None, json=None):
-        new_headers = self.__get_headers(headers)
-        new_headers['Content-Type'] = "application/json"
-        new_headers['Accept'] = "application/json"
+        """
+        Wrapper around requests post method
+        Args:
+            path (str): request path
+            headers (dict): additional headers
+            json (dict): request payload
+
+        Returns:
+            dict: response body
+        """
+        new_headers = self.__merge_dicts(self.auth_header, self.content_type_headers)
+        new_headers = self.__merge_dicts(new_headers, headers)
         return self._request("POST", self.__url(path), headers=new_headers, json=json)
 
     def put(self, path, headers=None, json=None):
-        new_headers = self.__get_headers(headers)
-        new_headers['Content-Type'] = "application/json"
-        new_headers['Accept'] = "application/json"
+        """
+        Wrapper around requests put method
+        Args:
+            path (str): request path
+            headers (dict): additional headers
+            json (dict): request payload
+
+        Returns:
+            dict: response body
+        """
+        new_headers = self.__merge_dicts(self.auth_header, self.content_type_headers)
+        new_headers = self.__merge_dicts(new_headers, headers)
         return self._request("PUT", self.__url(path), headers=new_headers, json=json)
 
     def delete(self, path, headers=None):
-        new_headers = self.__get_headers(headers)
-        return self._request("DELETE", self.__url(path), headers=new_headers)
+        """
+        Wrapper around requests delete method
+        Args:
+            path (str): request path
+            headers (dict): additional headers
 
-    def __get_headers(self, headers):
-        new_headers = self.headers.copy()
-        if headers:
-            new_headers.update(headers)
-        return new_headers
+        Returns:
+            dict: response body
+        """
+        new_headers = self.__merge_dicts(self.auth_header, headers)
+        return self._request("DELETE", self.__url(path), headers=new_headers)
 
     def __url(self, path):
         return "/".join([self.endpoint.strip("/"), path])
+
+    @staticmethod
+    def __merge_dicts(first, second):
+        try:
+            new_headers = first.copy()
+        except AttributeError:
+            new_headers = {}
+
+        try:
+            new_headers.update(second)
+        except TypeError:
+            pass
+
+        return new_headers
 
     @staticmethod
     def _request(method, path, params=None, headers=None, json=None):
