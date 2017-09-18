@@ -120,7 +120,6 @@ class Users(object):
         """
         response = self.rest_client.get(routes.GET_USERS.format(service_id))
 
-        print(response)
         return [self.__user_from_json(user) for user in response['users']]
 
     @_validate_input
@@ -216,7 +215,7 @@ class Auth(object):
         response = self.rest_client.post(routes.AUTH_INITIATE.format(service_id, user_id), json={
             "method": method
         })
-        print(response)
+
         if response['method'] == "sms":
             return response['auth_id']
 
