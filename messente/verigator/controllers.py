@@ -8,7 +8,7 @@ def _validate_input(func):
     @wraps(func)
     def wrapper(*args):
         for arg in args[1:]:
-            if not isinstance(arg, str):
+            if not isinstance(arg, basestring):
                 raise ValueError("{} should be string".format(arg))
         return func(*args)
 
@@ -206,6 +206,9 @@ class Auth(object):
             user_id (str): user id
             method (str): auth method (sms or totp) use Auth.METHOD_SMS or Auth.METHOD_TOTP
 
+        Note:
+            System will automatically fall back from TOTP to SMS if user has no devices attached to the number
+
         Returns:
             str: auth_id if sms auth else None, raises exception on error
 
@@ -213,7 +216,7 @@ class Auth(object):
         response = self.rest_client.post(routes.AUTH_INITIATE.format(service_id, user_id), json={
             "method": method
         })
-
+        print(response)
         if response['method'] == "sms":
             return response['auth_id']
 

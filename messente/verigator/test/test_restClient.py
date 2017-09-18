@@ -1,11 +1,10 @@
 from unittest import TestCase
 
-from requests_mock import mock
-
+import requests_mock
 from messente.verigator import exceptions, client
 
 
-@mock()
+@requests_mock.mock()
 class TestRestClient(TestCase):
     def setUp(self):
         self.rest_client = client.RestClient("http://test", "test", "test")
