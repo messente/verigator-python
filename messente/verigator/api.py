@@ -4,14 +4,25 @@ from controllers import Users, Services, Auth
 
 
 class Api(object):
-    def __init__(self, username, password, endpoint=routes.URL):
-        """
+    """Main class for verigator api,
+    contains references to other controllers
 
-        :type password: str
-        :type username: str
-        :type endpoint: str
+    Attributes:
+        services (Services): controller for service resource
+        users (Users): controller for user resource
+        auth (Auth): controller for auth resource
+
+    """
+
+    def __init__(self, username, password, endpoint=routes.URL):
+
         """
-        print(__name__)
+        Initialize Verigator api
+        Args:
+            username (str): api username. Can be obtained from dashboard
+            password (str): api password. Can be obtained from dashboard
+            endpoint (str): api endpoint. Can be obtained from dashboard
+        """
         client = RestClient(endpoint, username, password)
         self.users = Users(client)
         self.services = Services(client)
