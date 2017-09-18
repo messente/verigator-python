@@ -1,6 +1,9 @@
+import sys
 from functools import wraps
 
 from messente.verigator import routes, models, client
+
+PY2 = sys.version_info.major == 2
 
 
 def _validate_input(func):
@@ -8,7 +11,7 @@ def _validate_input(func):
     @wraps(func)
     def wrapper(*args):
         for arg in args[1:]:
-            if not isinstance(arg, basestring):
+            if not isinstance(arg, str if not PY2 else basestring):
                 raise ValueError("{} should be string".format(arg))
         return func(*args)
 
