@@ -33,3 +33,8 @@ class WrongCredentialsError(VerigatorError):
 class InternalError(VerigatorError):
     def __init__(self, code, message):
         super(InternalError, self).__init__(code, message)
+
+
+class InvalidResponseError(VerigatorError):
+    def __init__(self, code, message):
+        super(InvalidResponseError, self).__init__(code, message)

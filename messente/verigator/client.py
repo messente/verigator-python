@@ -112,7 +112,11 @@ class RestClient(object):
         resp = requests.request(method, path, params=params, headers=headers, json=json)
 
         status_code = resp.status_code
-        resp_json = resp.json()
+        try:
+            resp_json = resp.json()
+        except ValueError:
+            raise exceptions.InvalidResponseError(0, resp.text)
+
         message = resp_json.get('message', None)
 
         if status_code == 400:

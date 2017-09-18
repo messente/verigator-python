@@ -63,15 +63,19 @@ class TestRestClient(TestCase):
         self.assertEqual(json, self.sample_response)
 
     def test_raises_errors(self, request_mocker):
-        self.assertAllRoutesRaises(exceptions.InternalError, request_mocker, 500)
-        self.assertAllRoutesRaises(exceptions.InvalidDataError, request_mocker, 400)
-        self.assertAllRoutesRaises(exceptions.WrongCredentialsError, request_mocker, 401)
-        self.assertAllRoutesRaises(exceptions.ResourceForbiddenError, request_mocker, 403)
-        self.assertAllRoutesRaises(exceptions.NoSuchResourceError, request_mocker, 404)
-        self.assertAllRoutesRaises(exceptions.ResourceAlreadyExistsError, request_mocker, 409)
-        self.assertAllRoutesRaises(exceptions.VerigatorError, request_mocker, 447)
+        self._assertAllRoutesRaises(exceptions.InternalError, request_mocker, 500)
+        self._assertAllRoutesRaises(exceptions.InvalidDataError, request_mocker, 400)
+        self._assertAllRoutesRaises(exceptions.WrongCredentialsError, request_mocker, 401)
+        self._assertAllRoutesRaises(exceptions.ResourceForbiddenError, request_mocker, 403)
+        self._assertAllRoutesRaises(exceptions.NoSuchResourceError, request_mocker, 404)
+        self._assertAllRoutesRaises(exceptions.ResourceAlreadyExistsError, request_mocker, 409)
+        self._assertAllRoutesRaises(exceptions.VerigatorError, request_mocker, 447)
 
-    def assertAllRoutesRaises(self, exception, request_mocker, code):
+    def test_non_json_response(self, request_mocker):
+        request_mocker.register_uri('GET', "http://test/test", text="Some non json response", status_code=200)
+        self.assertRaises(exceptions.InvalidResponseError, self.rest_client.get, "test")
+
+    def _assertAllRoutesRaises(self, exception, request_mocker, code):
         self._register_addresses(request_mocker, code)
 
         self.assertRaises(exception, self.rest_client.get, "test")
