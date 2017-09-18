@@ -1,6 +1,4 @@
-import routes
-from client import RestClient
-from controllers import Users, Services, Auth
+from messente.verigator import routes, client, controllers
 
 
 class Api(object):
@@ -8,14 +6,13 @@ class Api(object):
     contains references to other controllers
 
     Attributes:
-        services (Services): controller for service resource
-        users (Users): controller for user resource
-        auth (Auth): controller for auth resource
+        services (controllers.Services): controller for service resource
+        users (controllers.Users): controller for user resource
+        auth (controllers.Auth): controller for auth resource
 
     """
 
     def __init__(self, username, password, endpoint=routes.URL):
-
         """
         Initialize Verigator api
         Args:
@@ -23,7 +20,7 @@ class Api(object):
             password (str): api password. Can be obtained from dashboard
             endpoint (str): api endpoint. Can be obtained from dashboard
         """
-        client = RestClient(endpoint, username, password)
-        self.users = Users(client)
-        self.services = Services(client)
-        self.auth = Auth(client)
+        rest_client = client.RestClient(endpoint, username, password)
+        self.users = controllers.Users(rest_client)
+        self.services = controllers.Services(rest_client)
+        self.auth = controllers.Auth(rest_client)

@@ -1,11 +1,11 @@
-from unittest import TestCase, skip
-from messente.verigator.api import Api
+from unittest import TestCase
+
+from messente.verigator import api
 
 
 class ApiTest(TestCase):
-
     def setUp(self):
-        self.api = Api("", "")
+        self.api = api.Api("", "")
 
     def test_contains_required_libs(self):
         self.assertTrue(self.api.auth)

@@ -1,6 +1,6 @@
 import requests
 
-from .exceptions import *
+from messente.verigator import exceptions
 
 
 class RestClient(object):
@@ -116,20 +116,20 @@ class RestClient(object):
         message = resp_json.get('message', None)
 
         if status_code == 400:
-            raise InvalidDataError(400, message)
+            raise exceptions.InvalidDataError(400, message)
         elif status_code == 401:
-            raise WrongCredentialsError(401, message)
+            raise exceptions.WrongCredentialsError(401, message)
         elif status_code == 403:
-            raise ResourceForbiddenError(403, message)
+            raise exceptions.ResourceForbiddenError(403, message)
         elif status_code == 404:
-            raise NoSuchResourceError(404, message)
+            raise exceptions.NoSuchResourceError(404, message)
         elif status_code == 409:
-            raise ResourceAlreadyExistsError(409, message)
+            raise exceptions.ResourceAlreadyExistsError(409, message)
         elif status_code == 422:
-            raise InvalidDataError(422, message)
+            raise exceptions.InvalidDataError(422, message)
         elif status_code == 500:
-            raise InternalError(500, resp_json)
+            raise exceptions.InternalError(500, resp_json)
         elif 300 <= status_code <= 600:
-            raise VerigatorError(status_code, resp_json)
+            raise exceptions.VerigatorError(status_code, resp_json)
 
         return resp_json
