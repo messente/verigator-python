@@ -1,3 +1,7 @@
+"""
+Api description
+"""
+
 from messente.verigator import routes, client, controllers
 
 
@@ -7,7 +11,9 @@ class Api(object):
 
     Attributes:
         services (controllers.Services): controller for service resource
+
         users (controllers.Users): controller for user resource
+
         auth (controllers.Auth): controller for auth resource
 
     """
@@ -15,9 +21,12 @@ class Api(object):
     def __init__(self, username, password, endpoint=routes.URL):
         """
         Initialize Verigator api
+
         Args:
             username (str): api username. Can be obtained from dashboard
+
             password (str): api password. Can be obtained from dashboard
+
             endpoint (str): api endpoint. Can be obtained from dashboard
         """
         rest_client = client.RestClient(endpoint, username, password)

@@ -1,3 +1,7 @@
+"""
+Controllers module of the api
+"""
+
 import sys
 from functools import wraps
 
@@ -49,6 +53,7 @@ class Services(object):
 
         Args:
             domain (str): The domain name.
+
             name (str): The name of the service.
 
         Returns:
@@ -131,6 +136,7 @@ class Users(object):
 
         Args:
             service_id (str): service id
+
             id (str): user id
 
         Returns:
@@ -146,7 +152,9 @@ class Users(object):
 
         Args:
             service_id (str): service id
+
             number (str): users phone number, used for 2fa
+
             username (str): username
 
         Returns:
@@ -166,6 +174,7 @@ class Users(object):
 
         Args:
             service_id (str): service id
+
             id (str): user id
 
         Returns:
@@ -205,7 +214,9 @@ class Auth(object):
 
         Args:
             service_id (str): service id
+
             user_id (str): user id
+
             method (str): auth method (sms or totp) use Auth.METHOD_SMS or Auth.METHOD_TOTP
 
         Note:
@@ -228,9 +239,13 @@ class Auth(object):
 
         Args:
             service_id (str): service id
+
             user_id (str): user id
+
             method (str): auth method (sms or totp) use Auth.METHOD_SMS or Auth.METHOD_TOTP
+
             token (str): user provided token
+
             auth_id (str): in case of sms auth, auth_id you got when initiated authentication
 
         Returns:

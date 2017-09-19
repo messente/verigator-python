@@ -14,7 +14,7 @@ setup(
     author_email="admin@verigator.com",
     description="Official Verigator.com API library",
     license="Apache License, Version 2",
-    keywords="verigator messente sms verification 2FA pincode",
+    keywords="verigator messente sms verification 2FA pin code",
     url="http://messente.com/documentation/",
     test_suite="test"
 )
