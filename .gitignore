@@ -1,8 +1,0 @@
-.idea
-*.egg-info
-/.eggs/
-/build/
-/dist/
-_build
-*.pyc
-.DS_Store
