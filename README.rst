@@ -1,7 +1,7 @@
 Verigator Python Library
 ========================
 
-.. image:: https://travis-ci.org/messente/verigator-python.svg?branch=master
+|Build Status|
 
 Easy to use Python (2.7 and 3) wrapper for verigator rest api.
 
@@ -33,12 +33,12 @@ Check installation
     0.0.1
 
 Documentation
--------------
+~~~~~~~~~~~~~
 
 detailed docs can be found `here`_
 
 Examples
---------
+~~~~~~~~
 
 .. code:: python
 
@@ -78,12 +78,12 @@ Examples
     print("Verified Successfully!")
 
 License
--------
+~~~~~~~
 
 This project is licensed under the Apache License 2.0 - see the
 `LICENSE.txt`_ file for details
 
-.. _here: http://example.com
+.. _here: https://messente.github.io/verigator-python/modules.html
 .. _LICENSE.txt: LICENSE.txt
 
 .. |Build Status| image:: https://travis-ci.org/messente/verigator-python.svg?branch=master
