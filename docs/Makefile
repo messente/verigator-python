@@ -6,7 +6,7 @@ SPHINXOPTS    =
 SPHINXBUILD   = python -msphinx
 SPHINXPROJ    = Verigator-api
 SOURCEDIR     = .
-BUILDDIR      = _build
+BUILDDIR      = ../../verigator-python-docs
 
 # Put it first so that "make" without argument is like "make help".
 help:
