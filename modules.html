@@ -161,7 +161,7 @@
 <p>Api description</p>
 <dl class="class">
 <dt id="messente.verigator.api.Api">
-<em class="property">class </em><code class="descclassname">messente.verigator.api.</code><code class="descname">Api</code><span class="sig-paren">(</span><em>username</em>, <em>password</em>, <em>endpoint='https://api.verigator.com'</em><span class="sig-paren">)</span><a class="headerlink" href="#messente.verigator.api.Api" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">messente.verigator.api.</code><code class="descname">Api</code><span class="sig-paren">(</span><em>username</em>, <em>password</em>, <em>endpoint='https://api.dev.verigator.com'</em><span class="sig-paren">)</span><a class="headerlink" href="#messente.verigator.api.Api" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main class for verigator api,
 contains references to other controllers</p>
 <dl class="docutils">
@@ -173,7 +173,7 @@ contains references to other controllers</p>
 </dl>
 <dl class="method">
 <dt id="messente.verigator.api.Api.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>username</em>, <em>password</em>, <em>endpoint='https://api.verigator.com'</em><span class="sig-paren">)</span><a class="headerlink" href="#messente.verigator.api.Api.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>username</em>, <em>password</em>, <em>endpoint='https://api.dev.verigator.com'</em><span class="sig-paren">)</span><a class="headerlink" href="#messente.verigator.api.Api.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize Verigator api</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -315,8 +315,6 @@ sends sms in case of sms authentication</p>
 </dd>
 <dt>Note:</dt>
 <dd>System will automatically fall back from TOTP to SMS if user has no devices attached to the number</dd>
-<dt>Returns:</dt>
-<dd>str: auth_id if sms auth else None, raises exception on error</dd>
 </dl>
 </dd></dl>
 
@@ -329,8 +327,7 @@ sends sms in case of sms authentication</p>
 <dd><p class="first">service_id (str): service id</p>
 <p>user_id (str): user id</p>
 <p>method (str): auth method (sms or totp) use Auth.METHOD_SMS or Auth.METHOD_TOTP</p>
-<p>token (str): user provided token</p>
-<p class="last">auth_id (str): in case of sms auth, auth_id you got when initiated authentication</p>
+<p class="last">token (str): user provided token</p>
 </dd>
 <dt>Returns:</dt>
 <dd>(bool, dict): boolean indicating verification status and error dict in case verification fails</dd>
