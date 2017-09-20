@@ -222,19 +222,13 @@ class Auth(object):
         Note:
             System will automatically fall back from TOTP to SMS if user has no devices attached to the number
 
-        Returns:
-            str: auth_id if sms auth else None, raises exception on error
-
         """
-        response = self.rest_client.post(routes.AUTH_INITIATE.format(service_id, user_id), json={
+        self.rest_client.post(routes.AUTH_INITIATE.format(service_id, user_id), json={
             "method": method
         })
 
-        if response['method'] == "sms":
-            return response['auth_id']
-
     @_validate_input
-    def verify(self, service_id, user_id, method, token, auth_id=None):
+    def verify(self, service_id, user_id, method, token):
         """Verifies user input validity
 
         Args:
@@ -246,16 +240,12 @@ class Auth(object):
 
             token (str): user provided token
 
-            auth_id (str): in case of sms auth, auth_id you got when initiated authentication
 
         Returns:
             (bool, dict): boolean indicating verification status and error dict in case verification fails
 
         """
         json = {"method": method, "token": token}
-
-        if auth_id:
-            json["auth_id"] = auth_id
 
         response = self.rest_client.put(routes.AUTH_VERIFY.format(service_id, user_id), json=json)
 

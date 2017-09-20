@@ -10,7 +10,7 @@ service = api.services.create("http://example.com", "service_name")
 user = api.users.create(service.id, "+xxxxxxxxxxx", "username")
 
 # initiate sms authentication, you can use api.auth.METHOD_TOTP for time
-auth_id = api.auth.initiate(service.id, user.id, api.auth.METHOD_SMS)
+api.auth.initiate(service.id, user.id, api.auth.METHOD_SMS)
 
 # check user input until successfull pin verification
 while True:
@@ -22,8 +22,8 @@ while True:
     # read user input
     token = input("Enter Sms Pin: ")
     
-    #verify pin
-    verified, error = api.auth.verify(service.id, user.id, api.auth.METHOD_SMS, token, auth_id)
+    # verify pin
+    verified, error = api.auth.verify(service.id, user.id, api.auth.METHOD_SMS, token)
 
     if verified:
         break

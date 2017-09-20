@@ -10,8 +10,7 @@ class TestAuth(TestCase):
         self.rest_client = client.RestClient("http://test", "test", "test")
         self.auth = controllers.Auth(self.rest_client)
         self.sms_init_response = {
-            "method": "sms",
-            "auth_id": "auth_id"
+            "method": "sms"
         }
         self.totp_init_response = {
             "method": "totp"
@@ -32,26 +31,24 @@ class TestAuth(TestCase):
 
     def test_initiate_sms(self):
         self.rest_client.post = MagicMock(return_value=self.sms_init_response)
-        res = self.auth.initiate("sid", "uid", self.auth.METHOD_SMS)
+        self.auth.initiate("sid", "uid", self.auth.METHOD_SMS)
 
         self.rest_client.post.assert_called_with(routes.AUTH_INITIATE.format("sid", "uid"),
                                                  json={"method": "sms"})
-        self.assertEqual(res, self.sms_init_response['auth_id'])
 
     def test_initiate_totp(self):
         self.rest_client.post = MagicMock(return_value=self.totp_init_response)
-        res = self.auth.initiate("sid", "uid", self.auth.METHOD_TOTP)
+        self.auth.initiate("sid", "uid", self.auth.METHOD_TOTP)
 
         self.rest_client.post.assert_called_with(routes.AUTH_INITIATE.format("sid", "uid"),
                                                  json={"method": "totp"})
-        self.assertIsNone(res)
 
     def test_verify_sms(self):
         self.rest_client.put = MagicMock(return_value=self.verified_response)
-        verified, error = self.auth.verify("sid", "uid", self.auth.METHOD_SMS, "token", "auth_id")
+        verified, error = self.auth.verify("sid", "uid", self.auth.METHOD_SMS, "token")
 
         self.rest_client.put.assert_called_with(routes.AUTH_VERIFY.format("sid", "uid"),
-                                                json={"method": "sms", "token": "token", "auth_id": "auth_id"})
+                                                json={"method": "sms", "token": "token"})
         self.assertTrue(verified)
 
     def test_verify_totp(self):
