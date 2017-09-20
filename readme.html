@@ -219,7 +219,7 @@
     <span class="n">token</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter Sms Pin: &quot;</span><span class="p">)</span>
 
     <span class="c1"># verify pin</span>
-    <span class="n">verified</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="n">service</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">api</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">METHOD_SMS</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
+    <span class="n">verified</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="n">service</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">verified</span><span class="p">:</span>
         <span class="k">break</span>
