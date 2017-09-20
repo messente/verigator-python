@@ -67,7 +67,7 @@ Examples
         token = input("Enter Sms Pin: ")
 
         # verify pin
-        verified, error = api.auth.verify(service.id, user.id, api.auth.METHOD_SMS, token)
+        verified, error = api.auth.verify(service.id, user.id, token)
 
         if verified:
             break

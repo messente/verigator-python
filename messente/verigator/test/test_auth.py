@@ -45,26 +45,26 @@ class TestAuth(TestCase):
 
     def test_verify_sms(self):
         self.rest_client.put = MagicMock(return_value=self.verified_response)
-        verified, error = self.auth.verify("sid", "uid", self.auth.METHOD_SMS, "token")
+        verified, error = self.auth.verify("sid", "uid", "token")
 
         self.rest_client.put.assert_called_with(routes.AUTH_VERIFY.format("sid", "uid"),
-                                                json={"method": "sms", "token": "token"})
+                                                json={"token": "token"})
         self.assertTrue(verified)
 
     def test_verify_totp(self):
         self.rest_client.put = MagicMock(return_value=self.verified_response)
-        verified, error = self.auth.verify("sid", "uid", self.auth.METHOD_TOTP, "token")
+        verified, error = self.auth.verify("sid", "uid", "token")
 
         self.rest_client.put.assert_called_with(routes.AUTH_VERIFY.format("sid", "uid"),
-                                                json={"method": "totp", "token": "token"})
+                                                json={"token": "token"})
         self.assertTrue(verified)
 
     def test_verify_failed(self):
         self.rest_client.put = MagicMock(return_value=self.failed_response)
-        verified, error = self.auth.verify("sid", "uid", self.auth.METHOD_TOTP, "token")
+        verified, error = self.auth.verify("sid", "uid", "token")
 
         self.rest_client.put.assert_called_with(routes.AUTH_VERIFY.format("sid", "uid"),
-                                                json={"method": "totp", "token": "token"})
+                                                json={"token": "token"})
         self.assertFalse(verified)
 
     def test_invalid_input(self):

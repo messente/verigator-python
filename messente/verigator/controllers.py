@@ -60,11 +60,12 @@ class Services(object):
             models.Service: created service
 
         """
-
-        response = self.rest_client.post(routes.CREATE_SERVICE, json={
+        json = {
             'fqdn': domain,
             'name': name
-        })
+        }
+
+        response = self.rest_client.post(routes.CREATE_SERVICE, json=json)
         return self.__service_from_json(response)
 
     @_validate_input
@@ -162,10 +163,13 @@ class Users(object):
 
         """
 
-        response = self.rest_client.post(routes.CREATE_USER.format(service_id), json={
+        route = routes.CREATE_USER.format(service_id)
+        json = {
             "phone_number": number,
             "id_in_service": username
-        })
+        }
+
+        response = self.rest_client.post(route, json=json)
         return self.__user_from_json(response)
 
     @_validate_input
@@ -223,12 +227,13 @@ class Auth(object):
             System will automatically fall back from TOTP to SMS if user has no devices attached to the number
 
         """
-        self.rest_client.post(routes.AUTH_INITIATE.format(service_id, user_id), json={
-            "method": method
-        })
+        route = routes.AUTH_INITIATE.format(service_id, user_id)
+        json = {"method": method}
+
+        self.rest_client.post(route, json=json)
 
     @_validate_input
-    def verify(self, service_id, user_id, method, token):
+    def verify(self, service_id, user_id, token):
         """Verifies user input validity
 
         Args:
@@ -236,18 +241,17 @@ class Auth(object):
 
             user_id (str): user id
 
-            method (str): auth method (sms or totp) use Auth.METHOD_SMS or Auth.METHOD_TOTP
-
             token (str): user provided token
-
 
         Returns:
             (bool, dict): boolean indicating verification status and error dict in case verification fails
 
         """
-        json = {"method": method, "token": token}
 
-        response = self.rest_client.put(routes.AUTH_VERIFY.format(service_id, user_id), json=json)
+        route = routes.AUTH_VERIFY.format(service_id, user_id)
+        json = {"token": token}
+
+        response = self.rest_client.put(route, json=json)
 
         verified = response['verified']
         error = response.get('status', None)
