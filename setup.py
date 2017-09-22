@@ -16,5 +16,5 @@ setup(
     license="Apache License, Version 2",
     keywords="verigator messente sms verification 2FA pin code",
     url="http://messente.com/documentation/",
-    test_suite="test"
+    test_suite="messente.verigator.test"
 )
