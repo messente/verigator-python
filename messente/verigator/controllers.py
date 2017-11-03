@@ -244,7 +244,7 @@ class Auth(object):
             token (str): user provided token
 
         Returns:
-            (bool, dict): boolean indicating verification status and error dict in case verification fails
+            bool: boolean indicating verification status
 
         """
 
@@ -254,6 +254,5 @@ class Auth(object):
         response = self.rest_client.put(route, json=json)
 
         verified = response['verified']
-        error = response.get('status', None)
 
-        return verified, error
+        return verified

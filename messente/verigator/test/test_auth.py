@@ -45,7 +45,7 @@ class TestAuth(TestCase):
 
     def test_verify_sms(self):
         self.rest_client.put = MagicMock(return_value=self.verified_response)
-        verified, error = self.auth.verify("sid", "uid", "token")
+        verified = self.auth.verify("sid", "uid", "token")
 
         self.rest_client.put.assert_called_with(routes.AUTH_VERIFY.format("sid", "uid"),
                                                 json={"token": "token"})
@@ -53,7 +53,7 @@ class TestAuth(TestCase):
 
     def test_verify_totp(self):
         self.rest_client.put = MagicMock(return_value=self.verified_response)
-        verified, error = self.auth.verify("sid", "uid", "token")
+        verified = self.auth.verify("sid", "uid", "token")
 
         self.rest_client.put.assert_called_with(routes.AUTH_VERIFY.format("sid", "uid"),
                                                 json={"token": "token"})
@@ -61,7 +61,7 @@ class TestAuth(TestCase):
 
     def test_verify_failed(self):
         self.rest_client.put = MagicMock(return_value=self.failed_response)
-        verified, error = self.auth.verify("sid", "uid", "token")
+        verified = self.auth.verify("sid", "uid", "token")
 
         self.rest_client.put.assert_called_with(routes.AUTH_VERIFY.format("sid", "uid"),
                                                 json={"token": "token"})
