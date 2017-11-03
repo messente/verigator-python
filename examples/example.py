@@ -23,11 +23,11 @@ while True:
     token = input("Enter Sms Pin: ")
     
     # verify pin
-    verified, error = api.auth.verify(service.id, user.id, token)
+    verified = api.auth.verify(service.id, user.id, token)
 
     if verified:
         break
 
-    print("Not Verified... Reason: {}".format(error['result']))
+    print("Not Verified...")
 
 print("Verified Successfully!")
