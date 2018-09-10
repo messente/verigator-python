@@ -6,7 +6,7 @@ from messente.verigator import __version__ as version
 setup(
     name="verigator",
     version=version,
-    packages=["messente", "messente.verigator"],
+    packages=["messente.verigator"],
     setup_requires=["requests==2.18.4"],
     install_requires=["requests==2.18.4"],
     tests_require=["requests-mock==1.3.0", "mock==2.0.0"],
