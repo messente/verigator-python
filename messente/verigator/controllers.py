@@ -226,11 +226,18 @@ class Auth(object):
         Note:
             System will automatically fall back from TOTP to SMS if user has no devices attached to the number
 
+        Returns:
+            str: string indicating 2FA method used (sms, totp)
+
         """
         route = routes.AUTH_INITIATE.format(service_id, user_id)
         json = {"method": method}
 
-        self.rest_client.post(route, json=json)
+        response = self.rest_client.post(route, json=json)
+
+        method = response['method']
+
+        return method
 
     @_validate_input
     def verify(self, service_id, user_id, token):
