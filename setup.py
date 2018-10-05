@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup
-from messente.verigator import __version__ as version
 
 setup(
     name="verigator",
-    version=version,
+    version="1.0.4",
     packages=["messente.verigator"],
     setup_requires=["requests==2.18.4"],
     install_requires=["requests==2.18.4"],

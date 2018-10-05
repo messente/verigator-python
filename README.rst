@@ -24,13 +24,7 @@ Or you can build it manually:
 
     python setup.py install
 
-Check installation
-
 ::
-
-    $ python -c "from messente.verigator import __version__;print(__version__)"
-
-    0.0.1
 
 Documentation
 ~~~~~~~~~~~~~
